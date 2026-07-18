@@ -6,11 +6,13 @@ import { generateActivationCode } from "@/lib/codes";
 
 export const maxDuration = 30;
 
-export async function POST(req: Request) {
+async function handleSync(req: Request) {
   const cronSecret = req.headers.get("x-cron-secret");
+  const authorization = req.headers.get("authorization");
   const session = await getSession();
 
-  if (cronSecret !== process.env.CRON_SECRET && !session?.isAdmin) {
+  const isVercelCron = authorization === `Bearer ${process.env.CRON_SECRET}`;
+  if (cronSecret !== process.env.CRON_SECRET && !isVercelCron && !session?.isAdmin) {
     return NextResponse.json({ error: "Não autorizado" }, { status: 403 });
   }
 
@@ -129,4 +131,12 @@ export async function POST(req: Request) {
       { status: 500 }
     );
   }
+}
+
+export async function GET(req: Request) {
+  return handleSync(req);
+}
+
+export async function POST(req: Request) {
+  return handleSync(req);
 }
