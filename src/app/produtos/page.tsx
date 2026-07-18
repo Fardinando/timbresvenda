@@ -10,11 +10,13 @@ interface Produto {
   slug: string;
   descricao: string | null;
   arquivo_tamanho: string | null;
+  preco: number | null;
 }
 
 export default function ProdutosPage() {
   const [produtos, setProdutos] = useState<Produto[]>([]);
   const [loading, setLoading] = useState(true);
+  const [buyingId, setBuyingId] = useState<string | null>(null);
 
   useEffect(() => {
     fetch("/api/produtos")
@@ -25,6 +27,35 @@ export default function ProdutosPage() {
       })
       .catch(() => setLoading(false));
   }, []);
+
+  async function handleBuy(produtoId: string) {
+    setBuyingId(produtoId);
+    try {
+      const res = await fetch("/api/checkout", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ produto_id: produtoId }),
+      });
+      const data = await res.json();
+      if (data.url) {
+        window.location.href = data.url;
+      } else {
+        alert(data.error || "Erro ao criar pagamento");
+      }
+    } catch {
+      alert("Erro de conexão");
+    } finally {
+      setBuyingId(null);
+    }
+  }
+
+  function formatPrice(price: number | null) {
+    if (!price || price === 0) return null;
+    return new Intl.NumberFormat("pt-BR", {
+      style: "currency",
+      currency: "BRL",
+    }).format(price / 100);
+  }
 
   return (
     <Shell>
@@ -53,52 +84,71 @@ export default function ProdutosPage() {
           </div>
         ) : (
           <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-            {produtos.map((produto) => (
-              <div
-                key={produto.id}
-                className="group rounded-2xl border border-border bg-card p-6 transition-all hover:border-primary/30 hover:glow-primary"
-              >
-                <div className="mb-4 flex h-14 w-14 items-center justify-center rounded-xl bg-primary/10 text-primary transition-colors group-hover:bg-primary/20">
-                  <svg
-                    className="h-7 w-7"
-                    fill="none"
-                    stroke="currentColor"
-                    viewBox="0 0 24 24"
-                  >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth={1.5}
-                      d="M9 19V6l12-3v13M9 19c0 1.105-1.343 2-3 2s-3-.895-3-2 1.343-2 3-2 3 .895 3 2zm12-3c0 1.105-1.343 2-3 2s-3-.895-3-2 1.343-2 3-2 3 .895 3 2zM9 10l12-3"
-                    />
-                  </svg>
-                </div>
+            {produtos.map((produto) => {
+              const price = formatPrice(produto.preco);
+              return (
+                <div
+                  key={produto.id}
+                  className="group rounded-2xl border border-border bg-card p-6 transition-all hover:border-primary/30 hover:glow-primary"
+                >
+                  <div className="mb-4 flex h-14 w-14 items-center justify-center rounded-xl bg-primary/10 text-primary transition-colors group-hover:bg-primary/20">
+                    <svg
+                      className="h-7 w-7"
+                      fill="none"
+                      stroke="currentColor"
+                      viewBox="0 0 24 24"
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth={1.5}
+                        d="M9 19V6l12-3v13M9 19c0 1.105-1.343 2-3 2s-3-.895-3-2 1.343-2 3-2 3 .895 3 2zm12-3c0 1.105-1.343 2-3 2s-3-.895-3-2 1.343-2 3-2 3 .895 3 2zM9 10l12-3"
+                      />
+                    </svg>
+                  </div>
 
-                <h3 className="text-lg font-bold">{produto.nome}</h3>
-                {produto.descricao && (
-                  <p className="mt-2 text-sm leading-relaxed text-muted line-clamp-3">
-                    {produto.descricao}
-                  </p>
-                )}
-
-                <div className="mt-4 flex items-center justify-between">
-                  {produto.arquivo_tamanho && (
-                    <span className="text-xs text-muted-foreground">
-                      {produto.arquivo_tamanho}
-                    </span>
+                  <h3 className="text-lg font-bold">{produto.nome}</h3>
+                  {produto.descricao && (
+                    <p className="mt-2 text-sm leading-relaxed text-muted line-clamp-3">
+                      {produto.descricao}
+                    </p>
                   )}
-                </div>
 
-                <div className="mt-5 flex gap-2">
-                  <Link
-                    href={`/ativar`}
-                    className="flex-1 rounded-lg bg-primary/10 px-4 py-2 text-center text-sm font-medium text-primary transition-colors hover:bg-primary/20"
-                  >
-                    Ativar Código
-                  </Link>
+                  <div className="mt-4 flex items-center justify-between">
+                    {price && (
+                      <span className="text-xl font-bold text-primary">
+                        {price}
+                      </span>
+                    )}
+                    {produto.arquivo_tamanho && (
+                      <span className="text-xs text-muted-foreground">
+                        {produto.arquivo_tamanho}
+                      </span>
+                    )}
+                  </div>
+
+                  <div className="mt-5 flex gap-2">
+                    <button
+                      onClick={() => handleBuy(produto.id)}
+                      disabled={buyingId === produto.id}
+                      className="flex-1 rounded-lg bg-primary px-4 py-2.5 text-center text-sm font-semibold text-background transition-colors hover:bg-primary-hover disabled:opacity-50"
+                    >
+                      {buyingId === produto.id
+                        ? "Redirecionando..."
+                        : price
+                          ? "Comprar"
+                          : "Grátis - Ativar"}
+                    </button>
+                    <Link
+                      href="/ativar"
+                      className="rounded-lg border border-border px-4 py-2.5 text-center text-sm font-medium text-muted transition-colors hover:border-primary/40 hover:text-primary"
+                    >
+                      Código
+                    </Link>
+                  </div>
                 </div>
-              </div>
-            ))}
+              );
+            })}
           </div>
         )}
       </div>
