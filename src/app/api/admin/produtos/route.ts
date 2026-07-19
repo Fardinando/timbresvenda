@@ -22,7 +22,7 @@ export async function POST(req: Request) {
     return NextResponse.json({ error: "Não autorizado" }, { status: 403 });
   }
 
-  const { nome, slug, descricao, ml_item_id, instrucoes } = await req.json();
+  const { nome, slug, descricao, ml_item_id, instrucoes, preview_url, preco } = await req.json();
 
   if (!nome || !slug) {
     return NextResponse.json({ error: "Nome e slug obrigatórios" }, { status: 400 });
@@ -30,7 +30,7 @@ export async function POST(req: Request) {
 
   const { data, error } = await supabaseAdmin
     .from("produtos")
-    .insert({ nome, slug, descricao, ml_item_id, instrucoes })
+    .insert({ nome, slug, descricao, ml_item_id, instrucoes, preview_url, preco: preco ? Number(preco) : null })
     .select()
     .single();
 
@@ -57,7 +57,7 @@ export async function PUT(req: Request) {
     return NextResponse.json({ error: "ID obrigatório" }, { status: 400 });
   }
 
-  const allowedFields = ["nome", "slug", "descricao", "ml_item_id", "instrucoes", "ativo"];
+  const allowedFields = ["nome", "slug", "descricao", "ml_item_id", "instrucoes", "ativo", "preview_url", "preco"];
   const filtered: Record<string, unknown> = {};
   for (const key of allowedFields) {
     if (updates[key] !== undefined) filtered[key] = updates[key];

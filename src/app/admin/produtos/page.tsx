@@ -11,6 +11,8 @@ interface Produto {
   arquivo_tamanho: string | null;
   ativo: boolean;
   chunks: unknown;
+  preview_url: string | null;
+  preco: number | null;
 }
 
 export default function AdminProdutos() {
@@ -22,6 +24,8 @@ export default function AdminProdutos() {
     descricao: "",
     ml_item_id: "",
     instrucoes: "",
+    preview_url: "",
+    preco: "",
   });
   const [editingId, setEditingId] = useState<string | null>(null);
   const [saving, setSaving] = useState(false);
@@ -59,7 +63,7 @@ export default function AdminProdutos() {
       }
 
       setMessage(editingId ? "Produto atualizado!" : "Produto criado!");
-      setForm({ nome: "", slug: "", descricao: "", ml_item_id: "", instrucoes: "" });
+      setForm({ nome: "", slug: "", descricao: "", ml_item_id: "", instrucoes: "", preview_url: "", preco: "" });
       setEditingId(null);
       loadProdutos();
     } catch {
@@ -77,6 +81,8 @@ export default function AdminProdutos() {
       descricao: produto.descricao ?? "",
       ml_item_id: produto.ml_item_id ?? "",
       instrucoes: "",
+      preview_url: produto.preview_url ?? "",
+      preco: produto.preco ? String(produto.preco) : "",
     });
   }
 
@@ -198,6 +204,38 @@ export default function AdminProdutos() {
                 placeholder="MLB1234567890"
               />
             </div>
+            <div>
+              <label className="mb-1 block text-sm font-medium text-muted">
+                Preço (R$, centavos)
+              </label>
+              <input
+                type="number"
+                value={form.preco}
+                onChange={(e) =>
+                  setForm((f) => ({ ...f, preco: e.target.value }))
+                }
+                className="w-full rounded-lg border border-border bg-surface px-4 py-2 text-sm text-foreground placeholder:text-muted-foreground focus:border-primary focus:outline-none"
+                placeholder="4990 = R$ 49,90"
+              />
+            </div>
+          </div>
+
+          <div>
+            <label className="mb-1 block text-sm font-medium text-muted">
+              URL do Preview de Áudio (opcional)
+            </label>
+            <input
+              type="url"
+              value={form.preview_url}
+              onChange={(e) =>
+                setForm((f) => ({ ...f, preview_url: e.target.value }))
+              }
+              className="w-full rounded-lg border border-border bg-surface px-4 py-2 text-sm text-foreground placeholder:text-muted-foreground focus:border-primary focus:outline-none"
+              placeholder="https://raw.githubusercontent.com/.../preview.mp3"
+            />
+            <p className="mt-1 text-xs text-muted-foreground">
+              Link direto para um .mp3 de amostra (max 30s recomendado)
+            </p>
           </div>
 
           <div>
@@ -232,13 +270,15 @@ export default function AdminProdutos() {
                 type="button"
                 onClick={() => {
                   setEditingId(null);
-                  setForm({
-                    nome: "",
-                    slug: "",
-                    descricao: "",
-                    ml_item_id: "",
-                    instrucoes: "",
-                  });
+      setForm({
+        nome: "",
+        slug: "",
+        descricao: "",
+        ml_item_id: "",
+        instrucoes: "",
+        preview_url: "",
+        preco: "",
+      });
                 }}
                 className="rounded-lg border border-border px-6 py-2 text-sm font-medium text-muted transition-colors hover:text-foreground"
               >

@@ -1,6 +1,7 @@
 "use client";
 
 import Shell from "@/components/Shell";
+import AudioPlayer from "@/components/AudioPlayer";
 import { useEffect, useState } from "react";
 import Link from "next/link";
 
@@ -11,6 +12,7 @@ interface Produto {
   descricao: string | null;
   arquivo_tamanho: string | null;
   preco: number | null;
+  preview_url: string | null;
 }
 
 export default function ProdutosPage() {
@@ -126,6 +128,12 @@ export default function ProdutosPage() {
                       </span>
                     )}
                   </div>
+
+                  {produto.preview_url && (
+                    <div className="mt-4">
+                      <AudioPlayer src={produto.preview_url} label="Ouvir amostra" />
+                    </div>
+                  )}
 
                   <div className="mt-5 flex gap-2">
                     <button
