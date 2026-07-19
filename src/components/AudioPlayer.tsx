@@ -44,7 +44,7 @@ export default function AudioPlayer({ src, label }: AudioPlayerProps) {
   }
 
   return (
-    <div className="rounded-xl border border-border bg-surface p-4">
+    <div className="rounded-xl border border-border bg-surface/80 p-3">
       <audio
         ref={audioRef}
         src={src}
@@ -55,30 +55,30 @@ export default function AudioPlayer({ src, label }: AudioPlayerProps) {
       />
 
       {label && (
-        <p className="mb-2 text-xs font-medium uppercase tracking-wider text-muted-foreground">
+        <p className="mb-1.5 text-[10px] font-bold uppercase tracking-[0.15em] text-muted-foreground">
           {label}
         </p>
       )}
 
-      <div className="flex items-center gap-3">
+      <div className="flex items-center gap-2.5">
         <button
           onClick={togglePlay}
-          className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-primary text-background transition-colors hover:bg-primary-hover"
+          className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-primary text-background transition-all hover:bg-primary-hover hover:scale-105 active:scale-95"
         >
           {playing ? (
-            <svg className="h-4 w-4" fill="currentColor" viewBox="0 0 24 24">
+            <svg className="h-3.5 w-3.5" fill="currentColor" viewBox="0 0 24 24">
               <path d="M6 4h4v16H6V4zm8 0h4v16h-4V4z" />
             </svg>
           ) : (
-            <svg className="h-4 w-4" fill="currentColor" viewBox="0 0 24 24">
+            <svg className="h-3.5 w-3.5 ml-0.5" fill="currentColor" viewBox="0 0 24 24">
               <path d="M8 5v14l11-7z" />
             </svg>
           )}
         </button>
 
-        <div className="flex-1">
+        <div className="flex-1 min-w-0">
           <div
-            className="group relative h-2 cursor-pointer overflow-hidden rounded-full bg-muted/20"
+            className="group relative h-1.5 cursor-pointer overflow-hidden rounded-full bg-muted/20"
             onClick={handleSeek}
           >
             <div
@@ -86,12 +86,12 @@ export default function AudioPlayer({ src, label }: AudioPlayerProps) {
               style={{ width: `${progress}%` }}
             />
             <div
-              className="absolute top-1/2 h-3.5 w-3.5 -translate-y-1/2 rounded-full bg-primary opacity-0 shadow-md transition-opacity group-hover:opacity-100"
-              style={{ left: `calc(${progress}% - 7px)` }}
+              className="absolute top-1/2 h-3 w-3 -translate-y-1/2 rounded-full bg-primary opacity-0 shadow-md transition-opacity group-hover:opacity-100"
+              style={{ left: `calc(${progress}% - 6px)` }}
             />
           </div>
 
-          <div className="mt-1 flex justify-between text-[10px] text-muted-foreground">
+          <div className="mt-0.5 flex justify-between text-[9px] tabular-nums text-muted-foreground">
             <span>{formatTime((progress / 100) * duration)}</span>
             <span>{duration ? formatTime(duration) : "0:00"}</span>
           </div>
