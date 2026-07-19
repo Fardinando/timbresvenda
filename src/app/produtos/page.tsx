@@ -3,6 +3,7 @@
 import Shell from "@/components/Shell";
 import AudioPlayer from "@/components/AudioPlayer";
 import { useEffect, useState } from "react";
+import Link from "next/link";
 
 interface Produto {
   id: string;
@@ -177,7 +178,7 @@ export default function ProdutosPage() {
                       </div>
                     )}
 
-                    <div className="mt-auto pt-4">
+                    <div className="mt-auto pt-4 space-y-2">
                       <button
                         onClick={() => handleBuy(produto.id)}
                         disabled={buyingId === produto.id}
@@ -195,6 +196,12 @@ export default function ProdutosPage() {
                           price ? "Comprar Agora" : "Ativar Grátis"
                         )}
                       </button>
+                      <Link
+                        href={`/produtos/${produto.slug}`}
+                        className="block text-center text-xs font-medium text-muted transition-colors hover:text-primary"
+                      >
+                        Ver detalhes
+                      </Link>
                     </div>
                   </div>
                 </div>
