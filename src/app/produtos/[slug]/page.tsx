@@ -141,7 +141,7 @@ export default function ProdutoPage() {
         </nav>
 
         <div className="grid gap-8 lg:grid-cols-5">
-          <div className="lg:col-span-3">
+          <div className="lg:col-span-3 min-w-0">
             <div className={`relative ${visualClass} flex h-64 items-center justify-center overflow-hidden rounded-2xl sm:h-80`}>
               <div className="absolute inset-0 bg-black/20" />
               <div className="relative flex flex-col items-center gap-3">
@@ -171,7 +171,7 @@ export default function ProdutoPage() {
               <h2 className="text-sm font-bold uppercase tracking-[0.15em] text-muted-foreground">
                 Descrição
               </h2>
-              <p className="mt-3 text-sm leading-relaxed text-muted">
+              <p className="mt-3 text-sm leading-relaxed text-muted break-words">
                 {produto.descricao || "Pacote de timbres profissionais em formato SoundFont (SF2), otimizado para AudioEvolution Mobile e outros DAWs compatíveis."}
               </p>
             </div>
@@ -181,7 +181,7 @@ export default function ProdutoPage() {
                 <h2 className="text-sm font-bold uppercase tracking-[0.15em] text-muted-foreground">
                   Instruções de uso
                 </h2>
-                <div className="mt-3 whitespace-pre-wrap rounded-xl border border-border bg-surface/80 p-4 text-sm leading-relaxed text-muted">
+                <div className="mt-3 whitespace-pre-wrap rounded-xl border border-border bg-surface/80 p-4 text-sm leading-relaxed text-muted break-words">
                   {produto.instrucoes}
                 </div>
               </div>
@@ -190,7 +190,7 @@ export default function ProdutoPage() {
 
           <div className="lg:col-span-2">
             <div className="sticky top-20 rounded-2xl card-gradient p-6 glow-primary">
-              <h1 className="text-2xl font-bold leading-tight">{produto.nome}</h1>
+              <h1 className="text-2xl font-bold leading-tight break-words">{produto.nome}</h1>
 
               <div className="mt-4 flex items-center gap-4 text-sm text-muted">
                 <div className="flex items-center gap-1.5">

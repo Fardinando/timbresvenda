@@ -126,7 +126,7 @@ export default function ProdutosPage() {
               return (
                 <div
                   key={produto.id}
-                  className="group overflow-hidden rounded-2xl card-gradient transition-all duration-300 hover:glow-primary-strong flex flex-col"
+                  className="group overflow-hidden rounded-2xl card-gradient transition-all duration-300 hover:glow-primary-strong flex flex-col min-w-0"
                 >
                   <div className={`relative ${visualClass} h-44 flex items-center justify-center`}>
                     <div className="absolute inset-0 bg-black/20" />
@@ -148,9 +148,9 @@ export default function ProdutosPage() {
                   </div>
 
                   <div className="flex flex-col flex-1 p-5">
-                    <h3 className="text-base font-bold leading-tight">{produto.nome}</h3>
+                    <h3 className="text-base font-bold leading-tight break-words">{produto.nome}</h3>
                     {produto.descricao && (
-                      <p className="mt-2 text-xs leading-relaxed text-muted line-clamp-2">
+                      <p className="mt-2 text-xs leading-relaxed text-muted line-clamp-2 break-words">
                         {produto.descricao}
                       </p>
                     )}
