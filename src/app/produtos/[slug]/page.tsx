@@ -3,6 +3,7 @@
 import Shell from "@/components/Shell";
 import AudioPlayer from "@/components/AudioPlayer";
 import Link from "next/link";
+import { useParams } from "next/navigation";
 import { useEffect, useState } from "react";
 
 interface Produto {
@@ -32,17 +33,14 @@ function hashStr(s: string) {
   return Math.abs(h);
 }
 
-export default function ProdutoPage({ params }: { params: Promise<{ slug: string }> }) {
-  const [slug, setSlug] = useState<string>("");
+export default function ProdutoPage() {
+  const routeParams = useParams<{ slug: string }>();
+  const slug = routeParams.slug ?? "";
   const [produto, setProduto] = useState<Produto | null>(null);
   const [vendidos, setVendidos] = useState(0);
   const [loading, setLoading] = useState(true);
   const [buying, setBuying] = useState(false);
   const [notFound, setNotFound] = useState(false);
-
-  useEffect(() => {
-    params.then((p) => setSlug(p.slug));
-  }, [params]);
 
   useEffect(() => {
     if (!slug) return;
