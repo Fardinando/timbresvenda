@@ -1,7 +1,7 @@
 "use client";
 
 import Shell from "@/components/Shell";
-import { useEffect, useState } from "react";
+import { Suspense, useEffect, useState } from "react";
 import { useSearchParams } from "next/navigation";
 import Link from "next/link";
 
@@ -11,7 +11,7 @@ interface CompraInfo {
   erro?: string;
 }
 
-export default function CompraConfirmadaPage() {
+function CompraConfirmadaInner() {
   const searchParams = useSearchParams();
   const sessionId = searchParams.get("session_id");
   const [info, setInfo] = useState<CompraInfo | null>(null);
@@ -110,5 +110,21 @@ export default function CompraConfirmadaPage() {
         </div>
       </div>
     </Shell>
+  );
+}
+
+export default function CompraConfirmadaPage() {
+  return (
+    <Suspense
+      fallback={
+        <Shell>
+          <div className="flex flex-1 items-center justify-center py-20">
+            <div className="h-8 w-8 animate-spin rounded-full border-2 border-primary border-t-transparent" />
+          </div>
+        </Shell>
+      }
+    >
+      <CompraConfirmadaInner />
+    </Suspense>
   );
 }
