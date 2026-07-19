@@ -51,10 +51,9 @@ export default function AtivarPage() {
   function formatCodigoInput(value: string) {
     const clean = value.replace(/[^A-Za-z0-9]/g, "").toUpperCase();
     const parts = [];
-    if (clean.length > 0) parts.push(clean.slice(0, 4));
-    if (clean.length > 4) parts.push(clean.slice(4, 8));
-    if (clean.length > 8) parts.push(clean.slice(8, 12));
-    if (clean.length > 12) parts.push(clean.slice(12, 16));
+    for (let i = 0; i < clean.length && i < 20; i += 4) {
+      parts.push(clean.slice(i, i + 4));
+    }
     return parts.join("-");
   }
 
@@ -107,7 +106,7 @@ export default function AtivarPage() {
                   value={codigo}
                   onChange={(e) => setCodigo(formatCodigoInput(e.target.value))}
                   required
-                  maxLength={19}
+                  maxLength={24}
                   className="w-full rounded-lg border border-border bg-surface px-4 py-3 text-center font-mono text-lg tracking-widest text-foreground placeholder:text-muted-foreground transition-colors focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary/30"
                   placeholder="TIMB-XXXX-XXXX-XXXX"
                 />
